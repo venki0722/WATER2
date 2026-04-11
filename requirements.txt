@@ -1,4 +1,5 @@
-flask
 joblib
-numpy
 pandas
+numpy
+flask
+scikit-learn
