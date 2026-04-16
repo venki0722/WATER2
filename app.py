@@ -79,3 +79,37 @@ if st.button("📊 Predict Water Requirement"):
 
     # ---------------- EXTRA DASHBOARD CARD ---------------- #
     st.info("📌 Tip: Higher humidity and rainfall usually reduce water requirement.")
+
+if "posts" not in st.session_state:
+    st.session_state.posts = []
+
+st.subheader("📢 Farmer Community")
+
+user_name = st.text_input("👤 Your Name")
+post_text = st.text_area("✍️ Share your problem or idea")
+
+if st.button("📤 Post"):
+    if post_text:
+        st.session_state.posts.append({
+            "user": user_name,
+            "content": post_text,
+            "comments": []
+        })
+        st.success("Posted successfully!")
+
+for i, post in enumerate(st.session_state.posts):
+    st.markdown(f"### 👤 {post['user']}")
+    st.write(post["content"])
+
+    # Comment input
+    comment = st.text_input(f"💬 Comment on post {i}", key=f"comment_{i}")
+
+    if st.button(f"Reply {i}"):
+        if comment:
+            post["comments"].append(comment)
+
+    # Show comments
+    for c in post["comments"]:
+        st.write(f"➡ {c}")
+
+    st.divider()
