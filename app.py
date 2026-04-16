@@ -112,4 +112,72 @@ for i, post in enumerate(st.session_state.posts):
     for c in post["comments"]:
         st.write(f"➡ {c}")
 
+
     st.divider()
+
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
+    st.session_state.username = ""
+
+st.sidebar.title("🔐 Account")
+
+if not st.session_state.logged_in:
+    username = st.sidebar.text_input("Username")
+    password = st.sidebar.text_input("Password", type="password")
+
+    if st.sidebar.button("Login"):
+        # Simple demo login (you can change this)
+        if username == "admin" and password == "1234":
+            st.session_state.logged_in = True
+            st.session_state.username = username
+            st.sidebar.success("Logged in successfully!")
+        else:
+            st.sidebar.error("Invalid credentials")
+else:
+    st.sidebar.success(f"Welcome {st.session_state.username}")
+    
+    if st.sidebar.button("Logout"):
+        st.session_state.logged_in = False
+        st.session_state.username = ""
+
+st.subheader("📢 Farmer Community")
+
+if st.session_state.logged_in:
+
+    post_text = st.text_area("✍️ Share your problem or idea")
+
+    if st.button("📤 Post"):
+        if post_text:
+            st.session_state.posts.append({
+                "user": st.session_state.username,
+                "content": post_text,
+                "comments": []
+            })
+            st.success("Posted successfully!")
+
+else:
+    st.warning("⚠️ Please login to post and comment")
+
+for i, post in enumerate(st.session_state.posts):
+    st.markdown(f"### 👤 {post['user']}")
+    st.write(post["content"])
+
+    if st.session_state.logged_in:
+        comment = st.text_input(f"💬 Comment {i}", key=f"c_{i}")
+
+        if st.button(f"Reply {i}"):
+            if comment:
+                post["comments"].append(
+                    f"{st.session_state.username}: {comment}"
+                )
+    else:
+        st.write("🔒 Login to comment")
+
+    for c in post["comments"]:
+        st.write(f"➡ {c}")
+
+    st.divider()
+
+
+
+
